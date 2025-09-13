@@ -146,37 +146,39 @@ export const SortingHatHero: React.FC<SortingHatHeroProps> = ({ onGetSorted }) =
           Discover your Hogwarts House with AI magic
         </div>
         
-        {/* Simplified CTA Button */}
-        <Button 
-          ref={buttonRef}
-          variant="magical" 
-          size="lg" 
-          className="text-xl md:text-2xl px-12 py-6 h-auto group relative overflow-hidden mb-4"
-          onClick={handleGetSorted}
-          // Removed interactive-spark magical-hover
-        >
-          <Sparkles className="w-6 h-6 mr-3" /> {/* Removed animations */}
-          <span className="relative z-10">Get Sorted</span>
-          <Sparkles className="w-6 h-6 ml-3" /> {/* Removed animations */}
-          
-          {/* Simplified hover effect */}
-          <div className="absolute inset-0 bg-candlelight-glow/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-        </Button>
-        
-        {/* Enter Your House button - only visible when logged in */}
-        {user && (
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          {/* Simplified CTA Button */}
           <Button 
-            ref={dashboardBtnRef}
-            variant="outline" 
+            ref={buttonRef}
+            variant="magical" 
             size="lg" 
-            className="text-xl md:text-2xl px-12 py-6 h-auto group relative overflow-hidden mt-4 border-parchment text-parchment hover:bg-parchment/10"
-            onClick={handleEnterHouse}
+            className="text-xl md:text-2xl px-12 py-6 h-auto group relative overflow-hidden"
+            onClick={handleGetSorted}
+            // Removed interactive-spark magical-hover
           >
-            <Home className="w-6 h-6 mr-3" />
-            <span className="relative z-10">Enter Your House</span>
-            <Crown className="w-6 h-6 ml-3" />
+            <Sparkles className="w-6 h-6 mr-3" /> {/* Removed animations */}
+            <span className="relative z-10">Get Sorted</span>
+            <Sparkles className="w-6 h-6 ml-3" /> {/* Removed animations */}
+            
+            {/* Simplified hover effect */}
+            <div className="absolute inset-0 bg-candlelight-glow/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </Button>
-        )}
+          
+          {/* Enter Your House button - only visible when logged in */}
+          {user && (
+            <Button 
+              ref={dashboardBtnRef}
+              variant="outline" 
+              size="lg" 
+              className="text-xl md:text-2xl px-12 py-6 h-auto group relative overflow-hidden border-parchment text-parchment hover:bg-parchment/10"
+              onClick={handleEnterHouse}
+            >
+              <Home className="w-6 h-6 mr-3" />
+              <span className="relative z-10">Enter Your House</span>
+              <Crown className="w-6 h-6 ml-3" />
+            </Button>
+          )}
+        </div>
         
         {/* Static achievement text */}
         <div className="mt-8">
