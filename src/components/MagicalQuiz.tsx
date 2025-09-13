@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
@@ -6,6 +6,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Wand2, BookOpen } from 'lucide-react';
 import gsap from 'gsap';
+import { AuthForms, UserProfile, useAuth } from '@/auth';
 
 interface MagicalQuizProps {
   onSubmit: (answers: { answers: Record<string, string>; personalityText: string; timestamp: string }) => void;
@@ -14,7 +15,8 @@ interface MagicalQuizProps {
   gameScore?: number;
 }
 
-const questions = [
+// Fallback static questions (used when AI generation fails or not configured)
+const fallbackQuestions = [
   {
     id: 'courage',
     question: 'When faced with danger, what is your first instinct?',
@@ -57,6 +59,8 @@ const questions = [
   }
 ];
 
+import { generateQuizQuestions, GeneratedQuizQuestion } from '@/lib/geminiQuiz';
+
 export const MagicalQuiz: React.FC<MagicalQuizProps> = ({ 
   onSubmit, 
   isVisible, 
@@ -65,9 +69,15 @@ export const MagicalQuiz: React.FC<MagicalQuizProps> = ({
 }) => {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [personalityText, setPersonalityText] = useState('');
+  const [dynamicQuestions, setDynamicQuestions] = useState<GeneratedQuizQuestion[] | null>(null);
+  const [loadingQuestions, setLoadingQuestions] = useState(false);
+  const [questionError, setQuestionError] = useState<string | null>(null);
+  const [useFallback, setUseFallback] = useState(false);
   const quizRef = useRef<HTMLDivElement>(null);
   const questionsRef = useRef<HTMLDivElement[]>([]);
+  const { user } = useAuth();
 
+  // Load AI generated questions when component becomes visible
   useEffect(() => {
     if (isVisible && quizRef.current) {
       // Reset and animate quiz container
@@ -94,6 +104,25 @@ export const MagicalQuiz: React.FC<MagicalQuizProps> = ({
       }
     }
   }, [isVisible]);
+  const fetchQuestions = useCallback(async () => {
+    setLoadingQuestions(true);
+    setQuestionError(null);
+    try {
+      const result = await generateQuizQuestions();
+      setDynamicQuestions(result.questions);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to generate questions';
+      setQuestionError(message);
+    } finally {
+      setLoadingQuestions(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isVisible && !dynamicQuestions && !useFallback) {
+      void fetchQuestions();
+    }
+  }, [isVisible, dynamicQuestions, useFallback, fetchQuestions]);
 
   const handleQuestionAnswer = (questionId: string, answer: string) => {
     setAnswers(prev => {
@@ -112,9 +141,39 @@ export const MagicalQuiz: React.FC<MagicalQuizProps> = ({
     onSubmit(quizData);
   };
 
-  const isComplete = Object.keys(answers).length === questions.length || personalityText.trim().length > 20;
+  const currentQuestions = dynamicQuestions && !useFallback ? dynamicQuestions.map(q => ({id: q.id, question: q.question, options: q.options})) : fallbackQuestions;
+  const isComplete = Object.keys(answers).length === currentQuestions.length || personalityText.trim().length > 50;
 
   if (!isVisible) return null;
+
+  // Show authentication forms if user is not logged in
+  if (!user) {
+    return (
+      <section className="py-16 px-6">
+        <div ref={quizRef} className="max-w-4xl mx-auto pt-8">
+          {/* Header */}
+          <div className="text-center mb-16 animate-fade-in-up">
+            <h2 className="font-magical text-4xl md:text-6xl text-candlelight mb-4">
+              The Sorting Ceremony
+            </h2>
+            <p className="font-story text-xl text-parchment mb-8">
+              You must be enrolled at Hogwarts to participate in the Sorting Ceremony
+            </p>
+            <div className="w-32 h-1 bg-gradient-to-r from-transparent via-candlelight to-transparent mx-auto mb-8"></div>
+            <p className="text-parchment/80 font-story mb-6 max-w-2xl mx-auto">
+              Sign in or create a new account to discover which of the four Hogwarts houses you truly belong to. 
+              Your magical journey awaits!
+            </p>
+          </div>
+          
+          {/* Authentication Forms */}
+          <div className="max-w-md mx-auto">
+            <AuthForms />
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-16 px-6">
@@ -155,8 +214,43 @@ export const MagicalQuiz: React.FC<MagicalQuizProps> = ({
         </div>
 
         {/* Quiz Questions */}
+        <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <p className="font-story text-parchment/80 text-sm">
+              {dynamicQuestions && !useFallback ? 'AI generated questions loaded.' : 'Using fallback static questions.'}
+            </p>
+            {questionError && (
+              <p className="text-red-300 text-sm font-story mt-1">{questionError}</p>
+            )}
+          </div>
+          <div className="flex gap-3">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={loadingQuestions}
+              onClick={() => fetchQuestions()}
+              className="border-candlelight/40 text-parchment"
+            >
+              {loadingQuestions ? 'Summoning...' : 'Regenerate'}
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => setUseFallback(f => !f)}
+              className="text-parchment/70 hover:text-parchment"
+            >
+              {useFallback ? 'Use AI Set' : 'Use Fallback Set'}
+            </Button>
+          </div>
+        </div>
+
+        {loadingQuestions && (
+          <div className="text-center text-parchment/70 font-story mb-8">Conjuring questions from the Realm of AI...</div>
+        )}
         <div className="space-y-8">
-          {questions.map((question, index) => (
+          {currentQuestions.map((question, index) => (
             <Card 
               key={question.id}
               ref={(el) => {
@@ -210,6 +304,11 @@ export const MagicalQuiz: React.FC<MagicalQuizProps> = ({
             {isComplete ? 'Cast Sorting Spell' : 'Complete the Form Above'}
             <Wand2 className="w-6 h-6 ml-3 animate-sparkle" />
           </Button>
+        </div>
+        
+        {/* User Profile Display */}
+        <div className="mt-16">
+          <UserProfile />
         </div>
       </div>
     </section>

@@ -25,28 +25,34 @@ import {
   Award,
   BookOpen,
   Users,
-  Target
+  Target,
+  LogOut
 } from "lucide-react";
 import { MagicalBackground } from "@/components/MagicalBackground";
 import { AudioProvider } from "@/components/AudioManager";
+import { useAuth } from "@/auth";
+import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 
 const Profile: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  
   const [userProfile, setUserProfile] = useState({
-    name: "Hermione Granger", 
-    email: "hermione.granger@hogwarts.edu",
+    name: user?.username || "Guest Wizard", 
+    email: user?.email || "wizard@hogwarts.edu",
     house: "gryffindor",
-    year: "7th Year",
+    year: "1st Year",
     location: "Hogwarts Castle",
-    bio: "Brightest witch of her age, passionate about learning and helping others. Always ready for an adventure with friends.",
-    joinDate: "September 1, 2024",
+    bio: "A new student at Hogwarts, eager to learn the magical arts and discover their true house.",
+    joinDate: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
     avatar: "/api/placeholder/150/150",
-    level: 7,
-    totalXP: 2840,
-    nextLevelXP: 3000,
-    wandCore: "Dragon Heartstring",
-    patronus: "Otter"
+    level: 1,
+    totalXP: 100,
+    nextLevelXP: 500,
+    wandCore: "Unknown",
+    patronus: "Unknown"
   });
 
   const profileRef = useRef<HTMLDivElement>(null);
@@ -405,6 +411,23 @@ const Profile: React.FC = () => {
                           <Button variant="outline" className="border-amber-600/50 text-amber-800 hover:bg-amber-100/50">
                             Reset Password
                           </Button>
+                        </div>
+                        
+                        <div className="mt-8 pt-6 border-t border-amber-600/20">
+                          <Button 
+                            variant="destructive" 
+                            className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800"
+                            onClick={() => {
+                              logout();
+                              navigate('/');
+                            }}
+                          >
+                            <LogOut className="w-4 h-4 mr-2" />
+                            Logout
+                          </Button>
+                          <p className="text-xs text-amber-700/70 text-center mt-2 font-story">
+                            You will be redirected to the home page
+                          </p>
                         </div>
                       </div>
                     </CardContent>

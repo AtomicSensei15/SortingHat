@@ -1,8 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Stars, Wand2, Crown, Zap } from 'lucide-react';
+import { Sparkles, Stars, Wand2, Crown, Zap, Home } from 'lucide-react';
 import heroImage from '@/assets/sorting-hat-hero.jpg';
 import { useAudio } from './AudioManager';
+import { useAuth } from '@/auth';
+import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 
 interface SortingHatHeroProps {
@@ -11,9 +13,12 @@ interface SortingHatHeroProps {
 
 export const SortingHatHero: React.FC<SortingHatHeroProps> = ({ onGetSorted }) => {
   const { playSound } = useAudio();
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const dashboardBtnRef = useRef<HTMLButtonElement>(null);
   const floatingElementsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -27,7 +32,7 @@ export const SortingHatHero: React.FC<SortingHatHeroProps> = ({ onGetSorted }) =
     
     // Optimize by using batch animations instead of individual tweens
     // Pre-set initial states in one batch
-    gsap.set([titleRef.current, subtitleRef.current, buttonRef.current], { opacity: 0, y: 30 });
+    gsap.set([titleRef.current, subtitleRef.current, buttonRef.current, dashboardBtnRef.current].filter(Boolean), { opacity: 0, y: 30 });
     
     // Animate title and subtitle together
     tl.to([titleRef.current, subtitleRef.current], {
@@ -36,11 +41,12 @@ export const SortingHatHero: React.FC<SortingHatHeroProps> = ({ onGetSorted }) =
       stagger: 0.2 // Small stagger instead of separate animations
     }, 0);
     
-    // Animate button
-    tl.to(buttonRef.current, {
+    // Animate buttons
+    tl.to([buttonRef.current, dashboardBtnRef.current].filter(Boolean), {
       opacity: 1,
       y: 0,
-      duration: 0.5 // Even shorter duration
+      duration: 0.5, // Even shorter duration
+      stagger: 0.15
     }, 0.4);
     
     // Only animate 2-3 floating elements instead of all
@@ -76,6 +82,23 @@ export const SortingHatHero: React.FC<SortingHatHeroProps> = ({ onGetSorted }) =
       });
     } else {
       onGetSorted();
+    }
+  };
+
+  const handleEnterHouse = () => {
+    playSound('magic-sparkle');
+    
+    // Add exit animation before navigation
+    if (dashboardBtnRef.current) {
+      gsap.to(dashboardBtnRef.current, {
+        scale: 1.1,
+        duration: 0.1,
+        yoyo: true,
+        repeat: 1,
+        onComplete: () => navigate('/profile')
+      });
+    } else {
+      navigate('/profile');
     }
   };
   return (
@@ -128,7 +151,7 @@ export const SortingHatHero: React.FC<SortingHatHeroProps> = ({ onGetSorted }) =
           ref={buttonRef}
           variant="magical" 
           size="lg" 
-          className="text-xl md:text-2xl px-12 py-6 h-auto group relative overflow-hidden"
+          className="text-xl md:text-2xl px-12 py-6 h-auto group relative overflow-hidden mb-4"
           onClick={handleGetSorted}
           // Removed interactive-spark magical-hover
         >
@@ -139,6 +162,21 @@ export const SortingHatHero: React.FC<SortingHatHeroProps> = ({ onGetSorted }) =
           {/* Simplified hover effect */}
           <div className="absolute inset-0 bg-candlelight-glow/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </Button>
+        
+        {/* Enter Your House button - only visible when logged in */}
+        {user && (
+          <Button 
+            ref={dashboardBtnRef}
+            variant="outline" 
+            size="lg" 
+            className="text-xl md:text-2xl px-12 py-6 h-auto group relative overflow-hidden mt-4 border-parchment text-parchment hover:bg-parchment/10"
+            onClick={handleEnterHouse}
+          >
+            <Home className="w-6 h-6 mr-3" />
+            <span className="relative z-10">Enter Your House</span>
+            <Crown className="w-6 h-6 ml-3" />
+          </Button>
+        )}
         
         {/* Static achievement text */}
         <div className="mt-8">

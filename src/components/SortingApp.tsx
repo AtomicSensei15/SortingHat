@@ -7,13 +7,24 @@ import { AudioProvider, AudioControls } from './AudioManager';
 import { MagicalBackground } from './MagicalBackground';
 import { GameProgress } from './GameProgress';
 import { useAudio } from './AudioManager';
+import { AuthProvider } from '@/auth';
 
 type AppState = 'hero' | 'quiz' | 'result';
+
+// Define types for quiz data
+interface QuizData {
+  answers: Record<string, string>;
+  personalityText: string;
+  timestamp: string;
+}
+
+// Define the house types
+type HouseType = 'gryffindor' | 'ravenclaw' | 'hufflepuff' | 'slytherin';
 
 export const SortingApp: React.FC = () => {
   const [currentState, setCurrentState] = useState<AppState>('hero');
   const [sortingResult, setSortingResult] = useState<{
-    house: string;
+    house: HouseType;
     description: string;
   } | null>(null);
   const [gameScore, setGameScore] = useState(0);
@@ -33,12 +44,12 @@ export const SortingApp: React.FC = () => {
     }, 100);
   };
 
-  const simulateAISorting = (quizData: any): { house: string; description: string } => {
+  const simulateAISorting = (quizData: QuizData): { house: HouseType; description: string } => {
     // Simulate AI processing based on quiz responses
-    const houses = ['gryffindor', 'ravenclaw', 'hufflepuff', 'slytherin'];
+    const houses: HouseType[] = ['gryffindor', 'ravenclaw', 'hufflepuff', 'slytherin'];
     
     // Simple logic based on answers or personality text
-    let houseScores = {
+    const houseScores = {
       gryffindor: 0,
       ravenclaw: 0,
       hufflepuff: 0,
@@ -75,7 +86,7 @@ export const SortingApp: React.FC = () => {
     }
 
     // Analyze quiz answers if provided
-    Object.values(quizData.answers || {}).forEach((answer: any) => {
+    Object.values(quizData.answers || {}).forEach((answer: string) => {
       if (typeof answer === 'string') {
         const answerLower = answer.toLowerCase();
         
@@ -98,7 +109,7 @@ export const SortingApp: React.FC = () => {
 
     // Find the house with highest score
     const sortedHouses = Object.entries(houseScores).sort(([,a], [,b]) => b - a);
-    const selectedHouse = sortedHouses[0][0];
+    const selectedHouse = sortedHouses[0][0] as HouseType;
 
     // Generate house-specific descriptions
     const descriptions = {
@@ -117,7 +128,7 @@ export const SortingApp: React.FC = () => {
     };
   };
 
-  const handleQuizSubmit = (quizData: any) => {
+  const handleQuizSubmit = (quizData: QuizData) => {
     // Calculate score based on answers
     const answerCount = Object.keys(quizData.answers || {}).length;
     const textLength = quizData.personalityText?.length || 0;
@@ -169,14 +180,15 @@ export const SortingApp: React.FC = () => {
   };
 
   return (
-    <AudioProvider>
-      <div className="min-h-screen">
-        <AudioControls />
-        
-        {/* Hero Section */}
-        <MagicalBackground variant="hero">
-          <SortingHatHero onGetSorted={handleGetSorted} />
-        </MagicalBackground>
+    <AuthProvider>
+      <AudioProvider>
+        <div className="min-h-screen">
+          <AudioControls />
+          
+          {/* Hero Section */}
+          <MagicalBackground variant="hero">
+            <SortingHatHero onGetSorted={handleGetSorted} />
+          </MagicalBackground>
         
         {/* Game Progress - Shows during quiz */}
         {currentState === 'quiz' && (
@@ -207,7 +219,7 @@ export const SortingApp: React.FC = () => {
           {sortingResult && (
             <MagicalBackground 
               variant="result" 
-              house={sortingResult.house as any}
+              house={sortingResult.house}
             >
               <HouseResult
                 house={sortingResult.house}
@@ -227,5 +239,6 @@ export const SortingApp: React.FC = () => {
         </MagicalBackground>
       </div>
     </AudioProvider>
+  </AuthProvider>
   );
 };

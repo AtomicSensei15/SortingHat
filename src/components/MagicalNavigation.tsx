@@ -1,22 +1,31 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Home, User, BookOpen, Trophy } from 'lucide-react';
+import { Home, User, BookOpen, Trophy, Crown } from 'lucide-react';
+import { useAuth } from '@/auth';
 
 export const MagicalNavigation: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user } = useAuth();
   
-  // Hide navigation on quiz page since we show progress bar there
-  if (location.pathname === '/quiz') {
+  // Hide navigation on quiz page and homepage
+  if (location.pathname === '/quiz' || location.pathname === '/') {
     return null;
   }
 
-  const navItems = [
+  // Define nav items based on authentication state
+  const baseNavItems = [
     { path: '/', label: 'Home', icon: Home },
+  ];
+  
+  const authenticatedNavItems = [
     { path: '/quiz', label: 'Quiz', icon: BookOpen },
     { path: '/profile', label: 'Profile', icon: User },
   ];
+  
+  // Only show authenticated items if user is logged in
+  const navItems = [...baseNavItems, ...(user ? authenticatedNavItems : [])];
 
   return (
     <nav className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50">
