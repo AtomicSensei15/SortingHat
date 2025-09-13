@@ -35,4 +35,7 @@ export type User = z.infer<typeof userSchema>;
 export type LoginCredentials = z.infer<typeof loginSchema>;
 
 // User with ID for authenticated users
-export type AuthUser = User & { id: string };
+export type AuthUser = User & { 
+  id: string;
+  house?: 'gryffindor' | 'ravenclaw' | 'hufflepuff' | 'slytherin';
+};

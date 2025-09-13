@@ -74,6 +74,28 @@ export const AuthService = {
     AuthService.setCurrentUser(null);
   },
 
+  // Update a user's house
+  updateUserHouse: (userId: string, house: 'gryffindor' | 'ravenclaw' | 'hufflepuff' | 'slytherin'): AuthUser | null => {
+    const users = AuthService.getUsers();
+    const userIndex = users.findIndex(user => user.id === userId);
+
+    if (userIndex === -1) {
+      return null; // User not found
+    }
+
+    // Update user's house
+    users[userIndex].house = house;
+    AuthService.saveUsers(users);
+
+    // Update current user if it's the same user
+    const currentUser = AuthService.getCurrentUser();
+    if (currentUser && currentUser.id === userId) {
+      AuthService.setCurrentUser(users[userIndex]);
+    }
+
+    return users[userIndex];
+  },
+
   // Check if user is authenticated
   isAuthenticated: (): boolean => {
     return !!AuthService.getCurrentUser();
