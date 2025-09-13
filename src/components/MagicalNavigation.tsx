@@ -9,8 +9,8 @@ export const MagicalNavigation: React.FC = () => {
   const location = useLocation();
   const { user } = useAuth();
   
-  // Hide navigation on quiz page and homepage
-  if (location.pathname === '/quiz' || location.pathname === '/') {
+  // Hide navigation on quiz, loading, and home pages
+  if (location.pathname === '/quiz' || location.pathname === '/' || location.pathname === '/loading') {
     return null;
   }
 
