@@ -15,7 +15,7 @@ export interface QuizGenerationResult {
 }
 
 const SYSTEM_INSTRUCTIONS = `You are an assistant that generates Hogwarts house sorting quiz questions.
-Return 6-8 multiple-choice questions that help differentiate between the core traits of the four houses:
+Return 4-5 multiple-choice questions that help differentiate between the core traits of the four houses:
 - Gryffindor: courage, bold action, chivalry
 - Ravenclaw: intellect, curiosity, creativity
 - Hufflepuff: loyalty, patience, kindness, fairness

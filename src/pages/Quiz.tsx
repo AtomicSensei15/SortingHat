@@ -12,10 +12,7 @@ const Quiz: React.FC = () => {
   const [questionsAnswered, setQuestionsAnswered] = useState(0);
 
   const simulateAISorting = (quizData: { personalityText?: string; answers?: Record<string, string> }): { house: string; description: string } => {
-    // Simulate AI processing based on quiz responses
     const houses = ['gryffindor', 'ravenclaw', 'hufflepuff', 'slytherin'];
-    
-    // Simple logic based on answers or personality text
     const houseScores = {
       gryffindor: 0,
       ravenclaw: 0,
@@ -23,7 +20,6 @@ const Quiz: React.FC = () => {
       slytherin: 0
     };
 
-    // Analyze personality text if provided
     if (quizData.personalityText) {
       const text = quizData.personalityText.toLowerCase();
       
@@ -75,7 +71,6 @@ const Quiz: React.FC = () => {
       });
     }
 
-    // Add some randomization to make it more interesting
     Object.keys(houseScores).forEach(house => {
       houseScores[house as keyof typeof houseScores] += Math.random() * 0.5;
     });

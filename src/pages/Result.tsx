@@ -19,14 +19,12 @@ const Result: React.FC = () => {
   const { user } = useAuth();
   const state = location.state as ResultState;
 
-  // Update user's house after sorting
   useEffect(() => {
     if (user && state.house) {
       AuthService.updateUserHouse(user.id, state.house as 'gryffindor' | 'ravenclaw' | 'hufflepuff' | 'slytherin');
     }
   }, [user, state.house]);
 
-  // Redirect to home if no result data
   if (!state || !state.house) {
     navigate('/');
     return null;
@@ -45,8 +43,7 @@ const Result: React.FC = () => {
       <div className="min-h-screen">
         <MagicalBackground 
           variant="result" 
-          house={state.house as 'gryffindor' | 'ravenclaw' | 'hufflepuff' | 'slytherin'}
-        >
+          house={state.house as 'gryffindor' | 'ravenclaw' | 'hufflepuff' | 'slytherin'}>
           <HouseResult
             house={state.house}
             description={state.description}

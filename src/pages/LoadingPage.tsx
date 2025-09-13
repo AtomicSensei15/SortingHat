@@ -10,14 +10,11 @@ const LoadingPage = () => {
   useEffect(() => {
     const loadQuizData = async () => {
       try {
-        // This is just a simulation - in a real app, you would fetch actual data
-        await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate network delay
+        await new Promise(resolve => setTimeout(resolve, 2000)); 
         
-        // Once "data" is loaded, allow the loading screen to continue
         setIsLoading(false);
       } catch (error) {
         console.error('Error loading quiz data:', error);
-        // Even if there's an error, we continue to the quiz (could add error handling)
         setIsLoading(false);
       }
     };
@@ -26,7 +23,6 @@ const LoadingPage = () => {
   }, []);
 
   const handleLoadingComplete = () => {
-    // Navigate to the quiz page when loading is complete
     navigate('/quiz');
   };
 
@@ -34,7 +30,6 @@ const LoadingPage = () => {
     <LoadingQuotes 
       minimumLoadTime={5000} // 5 seconds minimum loading time
       onComplete={handleLoadingComplete}
-      // Pass isLoading to potentially show different states if needed
       isDataReady={!isLoading}
     />
   );
