@@ -1,0 +1,386 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+/* Magical Hogwarts Design System - All colors MUST be HSL */
+
+@layer base {
+  :root {
+    /* Magical Base Colors */
+    --background: 20 8% 8%;
+    --foreground: 43 100% 85%;
+    
+    /* Magical Atmosphere */
+    --magical-dark: 20 12% 12%;
+    --magical-medium: 25 15% 18%;
+    --candlelight: 43 100% 65%;
+    --candlelight-glow: 43 100% 75%;
+    --parchment: 43 35% 88%;
+    --parchment-dark: 35 25% 75%;
+    
+    /* House Colors */
+    --gryffindor-primary: 0 100% 45%;
+    --gryffindor-secondary: 43 100% 45%;
+    --ravenclaw-primary: 220 100% 25%;
+    --ravenclaw-secondary: 43 80% 60%;
+    --hufflepuff-primary: 43 100% 50%;
+    --hufflepuff-secondary: 35 40% 25%;
+    --slytherin-primary: 140 60% 20%;
+    --slytherin-secondary: 120 30% 35%;
+    
+    /* Component Colors */
+    --card: 20 15% 15%;
+    --card-foreground: 43 100% 85%;
+    --popover: 20 15% 15%;
+    --popover-foreground: 43 100% 85%;
+    --primary: 43 100% 65%;
+    --primary-foreground: 20 12% 12%;
+    --secondary: 25 15% 18%;
+    --secondary-foreground: 43 100% 85%;
+    --muted: 25 15% 18%;
+    --muted-foreground: 43 50% 65%;
+    --accent: 43 100% 65%;
+    --accent-foreground: 20 12% 12%;
+    --destructive: 0 100% 45%;
+    --destructive-foreground: 43 100% 85%;
+    --border: 25 20% 25%;
+    --input: 25 20% 25%;
+    --ring: 43 100% 65%;
+    --radius: 0.75rem;
+    
+    /* Magical Gradients */
+    --gradient-magical: linear-gradient(135deg, hsl(var(--magical-dark)), hsl(var(--magical-medium)));
+    --gradient-candlelight: linear-gradient(135deg, hsl(var(--candlelight)), hsl(var(--candlelight-glow)));
+    --gradient-parchment: linear-gradient(145deg, hsl(var(--parchment)), hsl(var(--parchment-dark)));
+    --gradient-gryffindor: linear-gradient(135deg, hsl(var(--gryffindor-primary)), hsl(var(--gryffindor-secondary)));
+    --gradient-ravenclaw: linear-gradient(135deg, hsl(var(--ravenclaw-primary)), hsl(var(--ravenclaw-secondary)));
+    --gradient-hufflepuff: linear-gradient(135deg, hsl(var(--hufflepuff-primary)), hsl(var(--hufflepuff-secondary)));
+    --gradient-slytherin: linear-gradient(135deg, hsl(var(--slytherin-primary)), hsl(var(--slytherin-secondary)));
+    
+    /* Magical Shadows */
+    --shadow-magical: 0 10px 30px -10px hsl(var(--candlelight) / 0.3);
+    --shadow-glow: 0 0 40px hsl(var(--candlelight-glow) / 0.4);
+    --shadow-deep: 0 25px 50px -12px hsl(20 20% 5% / 0.6);
+    
+    /* Animations */
+    --transition-magical: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-serif;
+  }
+}
+
+@layer components {
+  /* Magical Typography */
+  .font-magical {
+    font-family: 'Cinzel', serif;
+  }
+  
+  .font-story {
+    font-family: 'Crimson Text', serif;
+  }
+
+  /* Magical Animations */
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .animate-sparkle {
+    animation: sparkle 2s ease-in-out infinite;
+  }
+  
+  .animate-glow {
+    animation: glow 3s ease-in-out infinite alternate;
+  }
+  
+  .animate-fade-in-up {
+    animation: fadeInUp 0.8s ease-out;
+  }
+
+  /* Magical Effects */
+  .magical-border {
+    border: 2px solid transparent;
+    background: linear-gradient(hsl(var(--card)), hsl(var(--card))) padding-box,
+                var(--gradient-candlelight) border-box;
+  }
+  
+  .parchment-bg {
+    background: var(--gradient-parchment);
+    box-shadow: var(--shadow-magical);
+  }
+  
+  .candlelight-glow {
+    box-shadow: var(--shadow-glow);
+  }
+  
+  .magical-hover {
+    transition: var(--transition-magical);
+  }
+  
+  .magical-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-glow);
+  }
+
+  .interactive-spark {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .interactive-spark::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      hsl(var(--candlelight) / 0.4),
+      transparent
+    );
+    transition: left 0.5s ease;
+  }
+
+  .interactive-spark:hover::before {
+    left: 100%;
+  }
+
+  .magical-text {
+    background: var(--gradient-candlelight);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: text-sparkle 2s ease-in-out infinite;
+  }
+
+  .floating-particles {
+    position: relative;
+  }
+
+  .floating-particles::after {
+    content: '✨';
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    animation: levitate 6s ease-in-out infinite;
+    font-size: 0.8rem;
+    opacity: 0.7;
+  }
+
+  /* House Variants */
+  .gryffindor-theme {
+    background: var(--gradient-gryffindor);
+    color: hsl(var(--foreground));
+  }
+  
+  .ravenclaw-theme {
+    background: var(--gradient-ravenclaw);
+    color: hsl(var(--foreground));
+  }
+  
+  .hufflepuff-theme {
+    background: var(--gradient-hufflepuff);
+    color: hsl(var(--primary-foreground));
+  }
+  
+  .slytherin-theme {
+    background: var(--gradient-slytherin);
+    color: hsl(var(--foreground));
+  }
+}
+
+@layer utilities {
+  /* Magical Keyframes */
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+  }
+  
+  @keyframes sparkle {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.1); }
+  }
+  
+  @keyframes glow {
+    0% { box-shadow: 0 0 20px hsl(var(--candlelight) / 0.4); }
+    100% { box-shadow: 0 0 40px hsl(var(--candlelight) / 0.8); }
+  }
+  
+  @keyframes fadeInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes magical-shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  @keyframes bounce-magical {
+    0%, 100% { 
+      transform: translateY(0) scale(1);
+      filter: brightness(1);
+    }
+    25% { 
+      transform: translateY(-10px) scale(1.05);
+      filter: brightness(1.2);
+    }
+    50% { 
+      transform: translateY(-20px) scale(1.1);
+      filter: brightness(1.3);
+    }
+    75% { 
+      transform: translateY(-10px) scale(1.05);
+      filter: brightness(1.2);
+    }
+  }
+
+  @keyframes pulse-magical {
+    0% { 
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% { 
+      transform: scale(1.1);
+      opacity: 0.8;
+    }
+    100% { 
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  @keyframes rotate-magical {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  @keyframes levitate {
+    0%, 100% { 
+      transform: translateY(0px) rotate(0deg);
+    }
+    33% { 
+      transform: translateY(-15px) rotate(2deg);
+    }
+    66% { 
+      transform: translateY(-30px) rotate(-1deg);
+    }
+  }
+
+  @keyframes magical-reveal {
+    0% {
+      opacity: 0;
+      transform: scale(0.5) rotate(-180deg);
+      filter: blur(10px);
+    }
+    50% {
+      opacity: 0.8;
+      transform: scale(1.2) rotate(-90deg);
+      filter: blur(5px);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) rotate(0deg);
+      filter: blur(0px);
+    }
+  }
+
+  @keyframes text-sparkle {
+    0%, 100% {
+      text-shadow: 
+        0 0 5px hsl(var(--candlelight)),
+        0 0 10px hsl(var(--candlelight)),
+        0 0 15px hsl(var(--candlelight));
+    }
+    50% {
+      text-shadow: 
+        0 0 10px hsl(var(--candlelight-glow)),
+        0 0 20px hsl(var(--candlelight-glow)),
+        0 0 30px hsl(var(--candlelight-glow)),
+        0 0 40px hsl(var(--candlelight-glow));
+    }
+  }
+
+  @keyframes magical-border {
+    0% {
+      border-color: hsl(var(--candlelight) / 0.3);
+    }
+    50% {
+      border-color: hsl(var(--candlelight-glow) / 0.8);
+    }
+    100% {
+      border-color: hsl(var(--candlelight) / 0.3);
+    }
+  }
+}
